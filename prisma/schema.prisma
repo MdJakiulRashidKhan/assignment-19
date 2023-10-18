@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id           BigInt   @id @default(autoincrement()) @db.UnsignedBigInt()
+  firstName    String   @db.VarChar(50)
+  middlename   String   @db.VarChar(50)
+  lastName     String   @db.VarChar(50)
+  mobile       String   @db.VarChar(50)
+  email        String   @db.VarChar(50)
+  password     String   @db.VarChar(50)
+  admin        Boolean  @default(true)
+  registeredAt DateTime @default(now()) @db.DateTime()
+  lastLogin    DateTime @default(now()) @db.DateTime()
+
+  createdAt DateTime  @default(now()) @db.DateTime()
+  updatedAt DateTime  @default(now()) @updatedAt @db.DateTime()
+  product   product[]
+  order     order[]
+  cart      cart[]
+}
+
+model category {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt()
+  title     String   @db.VarChar(100)
+  metaTitle String   @db.VarChar(100)
+  slug      String   @db.VarChar(100)
+  contnt    String   @db.VarChar(100)
+  createdAt DateTime @default(now()) @db.DateTime()
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime()
+}
+
+model product {
+  id          BigInt   @id @default(autoincrement()) @db.UnsignedBigInt()
+  firstname   String   @db.VarChar(100)
+  metaTitle   String   @db.VarChar(100)
+  slug        String   @db.VarChar(100)
+  summary     String   @db.VarChar(100)
+  price       Int      @db.Int()
+  discount    Int      @db.Int()
+  publishedAt DateTime @default(now()) @db.DateTime()
+  startAt     DateTime @default(now()) @db.DateTime()
+  endAt       DateTime @default(now()) @db.DateTime()
+
+  userId BigInt @db.UnsignedBigInt()
+  user   user   @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  createdAt      DateTime         @default(now()) @db.DateTime()
+  updatedAt      DateTime         @default(now()) @updatedAt @db.DateTime()
+  porduct_meta   porduct_meta[]
+  product_review product_review[]
+}
+
+model order {
+  id           BigInt @id @default(autoincrement()) @db.UnsignedBigInt()
+  title        String @db.VarChar(100)
+  token        String @db.VarChar(100)
+  subtotal     Int    @db.Int()
+  itemDiscount Int    @db.Int()
+  tax          Int    @db.Int()
+  total        Int    @db.Int()
+  discount     Int    @db.Int()
+  grandTotal   Int    @db.Int()
+  firstName    String @db.VarChar(100)
+  middleName   String @db.VarChar(100)
+  lastName     String @db.VarChar(100)
+  mobile       String @db.VarChar(100)
+  email        String @db.VarChar(100)
+  city         String @db.VarChar(100)
+  country      String @db.VarChar(100)
+  userId       BigInt @db.UnsignedBigInt()
+  user         user   @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  createdAt DateTime @default(now()) @db.DateTime()
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime()
+}
+
+model cart {
+  id         BigInt @id @default(autoincrement()) @db.UnsignedBigInt()
+  title      String @db.VarChar(100)
+  sessionId  String @db.VarChar(100)
+  token      String @db.VarChar(100)
+  status     String @db.VarChar(100)
+  firstName  String @db.VarChar(100)
+  middleName String @db.VarChar(100)
+  lastName   String @db.VarChar(100)
+  mobile     String @db.VarChar(100)
+  email      String @db.VarChar(100)
+  city       String @db.VarChar(100)
+  country    String @db.VarChar(100)
+  userId     BigInt @db.UnsignedBigInt()
+  user       user   @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+}
+
+model porduct_meta {
+  id        BigInt  @id @default(autoincrement()) @db.UnsignedBigInt()
+  key       String  @db.VarChar(100)
+  content   String  @db.VarChar(100)
+  productId BigInt  @db.UnsignedBigInt()
+  product   product @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  createdAt DateTime @default(now()) @db.DateTime()
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime()
+}
+
+model product_review {
+  id        BigInt  @id @default(autoincrement()) @db.UnsignedBigInt()
+  title     String  @db.VarChar(100)
+  rating    String  @db.VarChar(100)
+  content   String  @db.VarChar(100)
+  productId BigInt  @db.UnsignedBigInt()
+  product   product @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  createdAt DateTime @default(now()) @db.DateTime()
+  updatedAt DateTime @default(now()) @updatedAt @db.DateTime()
+}
